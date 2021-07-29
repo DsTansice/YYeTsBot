@@ -25,8 +25,8 @@ services:
   yyets-web:
     image: bennythink/yyetsbot
     restart: unless-stopped
-    environment:
-      - mongo=mongo
+    env_file:
+      - conf/yyets.env
     working_dir: /YYeTsBot/yyetsweb/
     volumes:
       - ./data:/YYeTsBot/yyetsweb/data/
@@ -42,6 +42,12 @@ services:
     env_file:
       - env/yyets.env
 
+  mailhog:
+    image: cd2team/mailhog
+    restart: unless-stopped
+    ports:
+      - "8025:8025"
+
   nginx:
     restart: always
     image: nginx:alpine
@@ -51,7 +57,7 @@ services:
       - ./certs/:/etc/nginx/certs/
       - ./logs:/var/log/nginx/
     ports:
-      - 80:80
-      - 443:443
+      - "80:80"
+      - "443:443"
     environment:
       TZ: Asia/Shanghai
